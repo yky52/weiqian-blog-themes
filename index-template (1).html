@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - {{OPT.siteName}}</title>
+    <meta name="description" content="{{OPT.siteDescription}}">
+    <meta name="keywords" content="{{keyWords}}">
+    <style>
+        :root {
+            --color-bg: #fafaf9;
+            --color-surface: #ffffff;
+            --color-text: #1f2937;
+            --color-text-secondary: #6b7280;
+            --color-border: #e5e7eb;
+            --color-primary: #3b82f6;
+            --color-primary-hover: #2563eb;
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-text: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-border: #334155;
+            --color-primary: #60a5fa;
+            --color-primary-hover: #93c5fd;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        header {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--color-primary); cursor: pointer; }
+        .logo a { color: var(--color-primary); text-decoration: none; }
+        
+        nav { display: flex; gap: 30px; align-items: center; }
+        .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .nav-link { cursor: pointer; color: var(--color-text-secondary); transition: color 0.3s; text-decoration: none; font-size: 14px; padding: 8px 0; }
+        .nav-link:hover { color: var(--color-primary); }
+        
+        .hamburger { display: none; background: none; border: none; cursor: pointer; font-size: 24px; }
+        .theme-toggle { background: none; border: none; cursor: pointer; font-size: 18px; padding: 8px; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; }
+            .nav-links.show { display: flex; position: absolute; top: 60px; left: 0; right: 0; background: var(--color-surface); flex-direction: column; gap: 0; padding: 20px; border-bottom: 1px solid var(--color-border); }
+        }
+
+        .main-content { padding: 40px 0; min-height: calc(100vh - 80px); }
+
+        .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #6366f1 100%);
+            color: white;
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 { font-size: 48px; margin-bottom: 16px; }
+        .hero p { font-size: 18px; opacity: 0.9; }
+
+        .article-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .article-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        .article-card h3 { margin-bottom: 8px; font-size: 18px; color: var(--color-text); }
+        .article-meta { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 12px; }
+        .article-excerpt { font-size: 14px; line-height: 1.6; color: var(--color-text-secondary); }
+
+        .layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+
+        .sidebar-widget { margin-bottom: 30px; }
+        .sidebar-widget h3 { font-size: 16px; margin-bottom: 12px; font-weight: 600; }
+        .widget-list { display: flex; flex-direction: column; gap: 8px; }
+        .widget-item { padding: 10px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--color-text); }
+        .widget-item:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+        .pagination { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+        .pagination a { padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 4px; cursor: pointer; text-decoration: none; color: var(--color-text); background: var(--color-surface); transition: all 0.2s; }
+        .pagination a:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+        .article-detail-header { margin-bottom: 30px; }
+        .article-detail-meta { display: flex; gap: 20px; font-size: 14px; color: var(--color-text-secondary); margin-bottom: 20px; flex-wrap: wrap; }
+        .article-detail-content { line-height: 1.8; font-size: 16px; }
+        .back-link { color: var(--color-primary); text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+
+        .footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: 30px 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 40px;
+        }
+
+        .footer a { color: var(--color-primary); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .hero { padding: 40px 20px; }
+            .hero h1 { font-size: 32px; }
+            .layout { grid-template-columns: 1fr; }
+            .article-detail-meta { gap: 10px; font-size: 12px; }
+        }
+    </style>
+    {{#OPT.codeBeforHead}}{{{OPT.codeBeforHead}}}{{/OPT.codeBeforHead}}
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo"><a href="/">{{OPT.siteName}}</a></div>
+            <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('show')">☰</button>
+            <nav>
+                <ul class="nav-links">
+                    <li><a class="nav-link" href="/">首页</a></li>
+                    {{#widgetMenuList}}<li><a class="nav-link" href="{{url}}">{{title}}</a></li>{{/widgetMenuList}}
+                    <li><a class="nav-link" href="/admin/">管理</a></li>
+                    <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="main-content">
+    <div class="container">
+
+        {{#articleList}}
+            <div class="hero">
+                <h1>欢迎来到 {{OPT.siteName}}</h1>
+                <p>精选内容 · 结构化思维 · 减少信息噪音</p>
+            </div>
+
+            <div class="layout">
+                <div>
+                    <h2>最新文章</h2>
+                    {{#articleList}}<a class="article-card" href="{{url}}">
+                        <h3>{{title}}</h3>
+                        <div class="article-meta">{{createDate10}} • {{contentLength}} 字 • {{category}}</div>
+                        <p class="article-excerpt">{{contentText}}</p>
+                    </a>{{/articleList}}
+
+                    <div class="pagination">
+                        {{#pageNewer}}<a href="{{url}}">← {{title}}</a>{{/pageNewer}}
+                        {{#pageOlder}}<a href="{{url}}">{{title}} →</a>{{/pageOlder}}
+                    </div>
+                </div>
+
+                <div>
+                    {{#widgetCategoryList}}
+                        {{#-first}}<div class="sidebar-widget">
+                        <h3>分类</h3>
+                        <div class="widget-list">{{/-first}}
+                        <a class="widget-item" href="/category/{{.}}/">{{.}}</a>
+                        {{#-last}}</div>
+                        </div>{{/-last}}
+                    {{/widgetCategoryList}}
+
+                    {{#widgetTagsList}}
+                        {{#-first}}<div class="sidebar-widget">
+                        <h3>标签</h3>
+                        <div class="widget-list">{{/-first}}
+                        <a class="widget-item" href="/tags/{{.}}/">{{.}}</a>
+                        {{#-last}}</div>
+                        </div>{{/-last}}
+                    {{/widgetTagsList}}
+
+                    {{#widgetRecentlyList}}
+                        {{#-first}}<div class="sidebar-widget">
+                        <h3>最近文章</h3>
+                        <div class="widget-list">{{/-first}}
+                        <a class="widget-item" href="{{url}}">{{title}}</a>
+                        {{#-last}}</div>
+                        </div>{{/-last}}
+                    {{/widgetRecentlyList}}
+                </div>
+            </div>
+        {{/articleList}}
+
+        {{#articleSingle}}
+            <a class="back-link" href="/">← 返回首页</a>
+            <article>
+                <div class="article-detail-header">
+                    <h1>{{title}}</h1>
+                    <div class="article-detail-meta">
+                        <span>📅 {{createDate10}}</span>
+                        <span>📝 {{category}}</span>
+                        <span>⏱️ {{contentLength}} 字</span>
+                    </div>
+                </div>
+                <div class="article-detail-content">
+                    {{{contentHtml}}}
+                </div>
+            </article>
+
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--color-border);">
+                <div style="display: flex; justify-content: space-between; gap: 20px;">
+                    {{#articleNewer}}
+                        <a class="article-card" href="{{url}}" style="flex: 1;">
+                            <h3>← {{title}}</h3>
+                            <div class="article-meta">上一篇</div>
+                        </a>
+                    {{/articleNewer}}
+                    {{#articleOlder}}
+                        <a class="article-card" href="{{url}}" style="flex: 1;">
+                            <h3>{{title}} →</h3>
+                            <div class="article-meta">下一篇</div>
+                        </a>
+                    {{/articleOlder}}
+                </div>
+            </div>
+        {{/articleSingle}}
+
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        {{{OPT.copyRight}}}
+    </div>
+</footer>
+
+<script>
+document.documentElement.dataset.theme = localStorage.getItem('theme') || 'light';
+function toggleTheme() {
+    const current = document.documentElement.dataset.theme || 'light';
+    document.documentElement.dataset.theme = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', document.documentElement.dataset.theme);
+}
+</script>
+
+{{#OPT.codeBeforBody}}{{{OPT.codeBeforBody}}}{{/OPT.codeBeforBody}}
+</body>
+</html>
